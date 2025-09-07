@@ -1,0 +1,44 @@
+package {{packageName}}
+
+import org.koin.ktor.plugin.Koin
+import io.ktor.server.application.*
+{{#featureLocations}}
+import io.ktor.locations.*
+{{/featureLocations}}
+import io.ktor.server.routing.routing
+{{#generateApis}}{{#apiInfo}}{{#apis}}import {{apiPackage}}.{{classname}}
+{{/apis}}{{/apiInfo}}{{/generateApis}}
+import com.example.app.modules.*
+import org.koin.core.logger.PrintLogger
+import com.example.app.infrastructure.koin.KoinContext
+import com.example.app.configureAll
+
+{{#featureLocations}}
+@KtorExperimentalLocationsAPI
+{{/featureLocations}}
+fun Application.main() {
+    configureAll()
+
+{{#generateApis}}
+    install(Koin) {
+        modules(
+            {{#apiInfo}}{{#apis}}{{#operations}}{{#lambda.camelcase}}{{classname}}Module{{/lambda.camelcase}},
+            {{/operations}}{{/apis}}{{/apiInfo}}
+       ).let {
+          KoinContext.setContext(it)
+       }
+       createEagerInstances()
+       PrintLogger()
+    }
+    routing {
+    {{#apiInfo}}
+    {{#apis}}
+    {{#operations}}
+        {{classname}}()
+    {{/operations}}
+    {{/apis}}
+    {{/apiInfo}}
+    }
+
+{{/generateApis}}
+}

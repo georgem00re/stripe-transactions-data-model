@@ -1,0 +1,55 @@
+{{>licenseInfo}}
+package {{apiPackage}}
+
+import io.ktor.server.application.*
+import io.ktor.http.*
+import io.ktor.server.response.*
+{{#featureLocations}}
+import {{packageName}}.Paths
+import io.ktor.locations.*
+{{/featureLocations}}
+import io.ktor.server.routing.*
+import org.koin.ktor.ext.get as koinGetDependency
+{{#hasAuthMethods}}
+import io.ktor.server.auth.authenticate
+{{/hasAuthMethods}}
+{{#imports}}import {{import}}
+{{/imports}}
+import io.ktor.server.request.receive
+
+{{#operations}}
+interface {{classname}}Module {
+    {{#operation}}
+    suspend fun {{operationId}}(call: ApplicationCall{{#bodyParam}}, data: {{dataType}}{{/bodyParam}}): {{#responses}}{{#-first}}{{&dataType}}{{/-first}}{{/responses}}
+    {{/operation}}
+}
+{{/operations}}
+
+{{#operations}}
+{{#featureLocations}}
+@KtorExperimentalLocationsAPI
+{{/featureLocations}}
+fun Route.{{classname}}() {
+{{#operation}}
+    {{#hasAuthMethods}}
+    authenticate({{#authMethods}}"{{{name}}}", {{/authMethods}}) {
+    {{/hasAuthMethods}}
+    {{^featureLocations}}
+    route("{{path}}") {
+        {{#lambda.lowercase}}{{httpMethod}}{{/lambda.lowercase}} {
+            {{#lambda.indented_12}}{{>libraries/ktor/_api_body}}{{/lambda.indented_12}}
+        }
+    }
+    {{/featureLocations}}
+    {{#featureLocations}}
+    {{#lambda.lowercase}}{{httpMethod}}{{/lambda.lowercase}}<Paths.{{operationId}}> {
+        {{#lambda.indented_8}}{{>libraries/ktor/_api_body}}{{/lambda.indented_8}}
+    }
+    {{/featureLocations}}
+    {{#hasAuthMethods}}
+    }
+    {{/hasAuthMethods}}
+
+{{/operation}}
+}
+{{/operations}}

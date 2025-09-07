@@ -1,0 +1,17 @@
+{{>licenseInfo}}
+@file:UseSerializers(UUIDSerializer::class, OffsetDateTimeSerializer::class)
+package {{modelPackage}}
+
+{{#imports}}import {{import}}
+{{/imports}}
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.UseSerializers
+import com.example.app.serialization.UUIDSerializer
+import com.example.app.serialization.OffsetDateTimeSerializer
+
+{{#models}}
+@Serializable
+    {{#model}}
+        {{#isEnum}}{{>enum_class}}{{/isEnum}}{{^isEnum}}{{>data_class}}{{/isEnum}}
+    {{/model}}
+{{/models}}

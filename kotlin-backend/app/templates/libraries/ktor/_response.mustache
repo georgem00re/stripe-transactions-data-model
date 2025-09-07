@@ -1,0 +1,2 @@
+val result = koinGetDependency<{{classname}}Module>().{{operationId}}(call{{#bodyParam}}, call.receive(){{/bodyParam}})
+call.respond(HttpStatusCode.fromValue({{statusCode}}), result)
