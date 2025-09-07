@@ -62,6 +62,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CreateProductSuccessResponse'
+  /products:
+    get:
+      operationId: listProducts
+      tags:
+        - products
+      responses:
+        200:
+          description: |
+            A list of products.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListProductsSuccessResponse'
 components:
   schemas:
     SuccessResponse:
@@ -119,6 +132,21 @@ components:
         productId:
           type: string
           format: uuid
+    ListProductsSuccessResponse:
+      type: object
+      required:
+        - products
+      properties:
+        products:
+          type: array
+          items:
+            type: object
+            required:
+              - id
+            properties:
+              id:
+                type: string
+                format: uuid
   securitySchemes:
     basicAuth:
       type: http

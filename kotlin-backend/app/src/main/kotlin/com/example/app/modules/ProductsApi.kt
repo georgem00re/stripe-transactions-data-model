@@ -5,6 +5,7 @@ import com.example.app.database.ProductRepository
 import com.example.app.generated.apis.ProductsApiModule
 import com.example.app.generated.models.CreateProductRequestBody
 import com.example.app.generated.models.CreateProductSuccessResponse
+import com.example.app.generated.models.ListProductsSuccessResponse
 import com.example.app.infrastructure.koin.KtorKoinComponent
 import io.ktor.server.application.ApplicationCall
 import org.koin.core.component.get
@@ -26,7 +27,13 @@ class ProductsApi : ProductsApiModule, KtorKoinComponent() {
                 priceGbx = data.priceGbx
             )
         }
-
         return CreateProductSuccessResponse(productId)
+    }
+
+    override suspend fun listProducts(call: ApplicationCall): ListProductsSuccessResponse {
+        val products = get<ProductRepository>().use { productRepository ->
+            productRepository.listProducts()
+        }
+        return ListProductsSuccessResponse(products)
     }
 }

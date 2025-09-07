@@ -1,5 +1,6 @@
 package com.example.app.database
 
+import com.example.app.generated.models.ListCustomersSuccessResponseCustomersInner
 import setUUID
 import java.io.Closeable
 import java.sql.Connection
@@ -7,6 +8,7 @@ import java.util.UUID
 
 interface ProductRepository : Closeable {
     fun createProduct(priceGbx: Int): UUID
+    fun listProducts(): List<ListCustomersSuccessResponseCustomersInner>
 }
 
 class PostgresProductRepository(
@@ -29,5 +31,23 @@ class PostgresProductRepository(
 
         check(result.next())
         return result.getUUID("id")
+    }
+
+    override fun listProducts(): List<ListCustomersSuccessResponseCustomersInner> {
+        val result = connection.prepareStatement(
+            """
+                SELECT * FROM product
+            """.trimIndent()
+        ).executeQuery()
+
+        return buildList {
+            while (result.next()) {
+                add(
+                    ListCustomersSuccessResponseCustomersInner(
+                        id = result.getUUID("id")
+                    )
+                )
+            }
+        }
     }
 }

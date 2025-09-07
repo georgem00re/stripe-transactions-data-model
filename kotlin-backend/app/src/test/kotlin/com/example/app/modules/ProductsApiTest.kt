@@ -5,6 +5,7 @@ import com.example.app.database.ProductRepository
 import com.example.app.database.TestDatabase
 import com.example.app.infrastructure.koin.KoinContext
 import com.example.app.utils.createProduct
+import com.example.app.utils.listProducts
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -14,7 +15,7 @@ import org.koin.core.context.stopKoin
 import org.koin.dsl.module
 import org.koin.test.KoinTest
 import org.koin.test.get
-import kotlin.test.assertNotNull
+import kotlin.test.assertEquals
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ProductsApiTest : KoinTest {
@@ -41,8 +42,13 @@ class ProductsApiTest : KoinTest {
     }
 
     @Test
-    fun `Products can be created`() {
+    fun `Products can be created and listed`() {
         val productId = get<ProductsApi>().createProduct(999)
-        assertNotNull(productId)
+
+        val products = get<ProductsApi>().listProducts()
+        assertEquals(1, products.size)
+
+        val product = products.first()
+        assertEquals(productId, product.id)
     }
 }

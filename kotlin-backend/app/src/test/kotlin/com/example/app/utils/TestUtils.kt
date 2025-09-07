@@ -28,3 +28,10 @@ fun ProductsApi.createProduct(priceGbx: Int) =
             )
         ).productId
     }
+
+fun ProductsApi.listProducts() =
+    runBlocking {
+        listProducts(
+            call = createMockApplicationCall(),
+        ).products
+    }
