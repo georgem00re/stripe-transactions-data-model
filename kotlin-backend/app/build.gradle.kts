@@ -30,6 +30,7 @@ dependencies {
     implementation(libs.postgres)
     implementation(libs.typesafe)
     implementation(libs.hikari)
+    implementation(libs.stripe)
 
     testImplementation(libs.mockk)
     testImplementation(libs.koin.test)
