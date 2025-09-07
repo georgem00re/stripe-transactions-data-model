@@ -9,7 +9,7 @@ import java.util.UUID
 interface OrderRepository : Closeable {
     fun createOrderWithOrderLines(customerId: UUID, productIds: List<UUID>): UUID
     fun getOrders(): List<ListOrdersSuccessResponseOrdersInner>
-    fun getOrderCost(orderId: UUID): Int
+    fun getOrderCost(orderId: UUID): Long
 }
 
 class PostgresOrderRepository(
@@ -89,7 +89,7 @@ class PostgresOrderRepository(
         }
     }
 
-    override fun getOrderCost(orderId: UUID): Int {
+    override fun getOrderCost(orderId: UUID): Long {
         val result = connection.prepareStatement(
             """
                 SELECT
@@ -104,7 +104,7 @@ class PostgresOrderRepository(
         }.executeQuery()
 
         check(result.next())
-        return result.getInt("total_cost")
+        return result.getLong("total_cost")
     }
 
     private fun createOrderLine(orderId: UUID, productId: UUID): UUID {

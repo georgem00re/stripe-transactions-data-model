@@ -5,7 +5,7 @@ import java.sql.Connection
 import java.util.UUID
 
 interface PaymentIntentRepository : Closeable {
-    fun createPaymentIntent(orderId: UUID, amountGbx: Int): UUID
+    fun createPaymentIntent(orderId: UUID, amountGbx: Long): UUID
 }
 
 class PostgresPaymentIntentRepository(
@@ -15,7 +15,7 @@ class PostgresPaymentIntentRepository(
         connection.close()
     }
 
-    override fun createPaymentIntent(orderId: UUID, amountGbx: Int): UUID {
+    override fun createPaymentIntent(orderId: UUID, amountGbx: Long): UUID {
         val result = connection.prepareStatement(
             """
                 INSERT INTO payment_intent(id, order_id, amount_gbx)
@@ -25,7 +25,7 @@ class PostgresPaymentIntentRepository(
         ).apply {
             setUUID(1, UUID.randomUUID())
             setUUID(2, orderId)
-            setInt(3, amountGbx)
+            setLong(3, amountGbx)
         }.executeQuery()
 
         check(result.next())

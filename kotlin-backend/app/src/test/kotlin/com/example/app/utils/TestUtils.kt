@@ -25,7 +25,7 @@ fun CustomersApi.listCustomers() =
         ).customers
     }
 
-fun ProductsApi.createProduct(priceGbx: Int) =
+fun ProductsApi.createProduct(priceGbx: Long) =
     runBlocking {
         createProduct(
             call = createMockApplicationCall(),
@@ -60,7 +60,7 @@ fun OrdersApi.listOrders() = runBlocking {
     ).orders
 }
 
-fun PaymentIntentsApi.createPaymentIntent(orderId: UUID, amountGbx: Int) = runBlocking {
+fun PaymentIntentsApi.createPaymentIntent(orderId: UUID, amountGbx: Long) = runBlocking {
     createPaymentIntent(
         call = createMockApplicationCall(),
         data = CreatePaymentIntentRequestBody(

@@ -6,7 +6,7 @@ import java.sql.Connection
 import java.util.UUID
 
 interface ProductRepository : Closeable {
-    fun createProduct(priceGbx: Int): UUID
+    fun createProduct(priceGbx: Long): UUID
     fun listProducts(): List<ListCustomersSuccessResponseCustomersInner>
 }
 
@@ -16,7 +16,7 @@ class PostgresProductRepository(
     override fun close() {
         connection.close()
     }
-    override fun createProduct(priceGbx: Int): UUID {
+    override fun createProduct(priceGbx: Long): UUID {
         val result = connection.prepareStatement(
             """
             INSERT INTO product(id, price_gbx)
@@ -25,7 +25,7 @@ class PostgresProductRepository(
             """.trimIndent(),
         ).apply {
             setUUID(1, UUID.randomUUID())
-            setInt(2, priceGbx)
+            setLong(2, priceGbx)
         }.executeQuery()
 
         check(result.next())

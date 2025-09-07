@@ -58,7 +58,7 @@ class PaymentIntentsApiTest : KoinTest {
     @Test
     fun `Payment intents can be created`() {
         val customerId = get<CustomersApi>().createCustomer()
-        val productAmountGbx = 10
+        val productAmountGbx = 10L
         val productId = get<ProductsApi>().createProduct(productAmountGbx)
 
         val orderId = get<OrdersApi>().createOrder(
