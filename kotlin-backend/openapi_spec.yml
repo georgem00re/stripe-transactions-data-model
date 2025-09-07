@@ -93,6 +93,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CreateOrderSuccessResponse'
+  /orders:
+    get:
+      operationId: listOrders
+      tags:
+        - orders
+      responses:
+        200:
+          description: |
+            A list of orders.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListOrdersSuccessResponse'
 components:
   schemas:
     SuccessResponse:
@@ -192,6 +205,42 @@ components:
         orderId:
           type: string
           format: uuid
+    ListOrdersSuccessResponse:
+      type: object
+      required:
+        - orders
+      properties:
+        orders:
+          type: array
+          items:
+            type: object
+            required:
+              - orderId
+              - customerId
+              - products
+            properties:
+              orderId:
+                type: string
+                format: uuid
+              customerId:
+                type: string
+                format: uuid
+              products:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - productId
+                    - paymentStatus
+                  properties:
+                    productId:
+                      type: string
+                      format: uuid
+                    paymentStatus:
+                      type: string
+                      enum:
+                        - Paid
+                        - Unpaid
   securitySchemes:
     basicAuth:
       type: http

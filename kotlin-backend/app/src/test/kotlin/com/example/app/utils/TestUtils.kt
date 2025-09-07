@@ -51,3 +51,9 @@ fun OrdersApi.createOrder(customerId: UUID, productIds: List<UUID>) = runBlockin
         )
     ).orderId
 }
+
+fun OrdersApi.listOrders() = runBlocking {
+    listOrders(
+        call = createMockApplicationCall(),
+    ).orders
+}

@@ -13,5 +13,8 @@ src/main/kotlin/com/example/app/generated/models/CreateProductSuccessResponse.kt
 src/main/kotlin/com/example/app/generated/models/ErrorResponse.kt
 src/main/kotlin/com/example/app/generated/models/ListCustomersSuccessResponse.kt
 src/main/kotlin/com/example/app/generated/models/ListCustomersSuccessResponseCustomersInner.kt
+src/main/kotlin/com/example/app/generated/models/ListOrdersSuccessResponse.kt
+src/main/kotlin/com/example/app/generated/models/ListOrdersSuccessResponseOrdersInner.kt
+src/main/kotlin/com/example/app/generated/models/ListOrdersSuccessResponseOrdersInnerProductsInner.kt
 src/main/kotlin/com/example/app/generated/models/ListProductsSuccessResponse.kt
 src/main/kotlin/com/example/app/generated/models/SuccessResponse.kt

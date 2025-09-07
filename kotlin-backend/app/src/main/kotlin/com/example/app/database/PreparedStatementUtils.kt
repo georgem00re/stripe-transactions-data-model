@@ -1,4 +1,4 @@
-import com.example.app.database.PaymentStatus
+import com.example.app.generated.models.ListOrdersSuccessResponseOrdersInnerProductsInner
 import java.sql.PreparedStatement
 import java.util.UUID
 
@@ -7,6 +7,9 @@ fun PreparedStatement.setUUID(
     uuid: UUID,
 ) = setString(parameterIndex, uuid.toString())
 
-fun PreparedStatement.setPaymentStatus(parameterIndex: Int, paymentStatus: PaymentStatus) {
+fun PreparedStatement.setPaymentStatus(
+    parameterIndex: Int,
+    paymentStatus: ListOrdersSuccessResponseOrdersInnerProductsInner.PaymentStatus
+) {
     this.setString(parameterIndex, paymentStatus.value)
 }

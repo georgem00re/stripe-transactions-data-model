@@ -5,6 +5,7 @@ import com.example.app.database.PostgresOrderRepository
 import com.example.app.generated.apis.OrdersApiModule
 import com.example.app.generated.models.CreateOrderRequestBody
 import com.example.app.generated.models.CreateOrderSuccessResponse
+import com.example.app.generated.models.ListOrdersSuccessResponse
 import com.example.app.infrastructure.koin.KtorKoinComponent
 import io.ktor.server.application.ApplicationCall
 import org.koin.core.component.get
@@ -28,5 +29,12 @@ class OrdersApi : OrdersApiModule, KtorKoinComponent() {
             )
         }
         return CreateOrderSuccessResponse(orderId)
+    }
+
+    override suspend fun listOrders(call: ApplicationCall): ListOrdersSuccessResponse {
+        val orders = get<OrderRepository>().use { orderRepository ->
+            orderRepository.getOrders()
+        }
+        return ListOrdersSuccessResponse(orders)
     }
 }

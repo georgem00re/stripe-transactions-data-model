@@ -7,12 +7,14 @@ import com.example.app.database.PostgresOrderRepository
 import com.example.app.database.PostgresProductRepository
 import com.example.app.database.ProductRepository
 import com.example.app.database.TestDatabase
+import com.example.app.generated.models.ListOrdersSuccessResponseOrdersInnerProductsInner
 import com.example.app.infrastructure.koin.KoinContext
 import com.example.app.utils.createCustomer
 import com.example.app.utils.createOrder
 import com.example.app.utils.createProduct
+import com.example.app.utils.listOrders
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -51,7 +53,7 @@ class OrdersApiTest : KoinTest {
     }
 
     @Test
-    fun `Orders can be created`() {
+    fun `Orders can be created and listed`() {
         val customerId = get<CustomersApi>().createCustomer()
         val productId = get<ProductsApi>().createProduct(10)
 
@@ -59,6 +61,19 @@ class OrdersApiTest : KoinTest {
             customerId = customerId,
             productIds = listOf(productId),
         )
-        assertNotNull(orderId)
+
+        val orders = get<OrdersApi>().listOrders()
+        assertEquals(1, orders.size)
+
+        val order = orders.first()
+        assertEquals(customerId, order.customerId)
+        assertEquals(orderId, order.orderId)
+
+        val orderProducts = order.products
+        assertEquals(1, orderProducts.size)
+
+        val orderProduct = orderProducts.first()
+        assertEquals(productId, orderProduct.productId)
+        assertEquals(ListOrdersSuccessResponseOrdersInnerProductsInner.PaymentStatus.Unpaid, orderProduct.paymentStatus)
     }
 }

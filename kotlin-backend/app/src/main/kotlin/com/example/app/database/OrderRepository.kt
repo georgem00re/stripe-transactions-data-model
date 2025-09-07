@@ -1,5 +1,7 @@
 package com.example.app.database
 
+import com.example.app.generated.models.ListOrdersSuccessResponseOrdersInner
+import com.example.app.generated.models.ListOrdersSuccessResponseOrdersInnerProductsInner
 import setPaymentStatus
 import setUUID
 import java.io.Closeable
@@ -8,11 +10,7 @@ import java.util.UUID
 
 interface OrderRepository : Closeable {
     fun createOrderWithOrderLines(customerId: UUID, productIds: List<UUID>): UUID
-}
-
-enum class PaymentStatus(val value: String) {
-    Paid("Paid"),
-    Unpaid("Unpaid"),
+    fun getOrders(): List<ListOrdersSuccessResponseOrdersInner>
 }
 
 class PostgresOrderRepository(
@@ -32,6 +30,63 @@ class PostgresOrderRepository(
                 )
             }
             orderId
+        }
+    }
+
+    data class OrderLineRow(
+        val customerId: UUID,
+        val orderId: UUID,
+        val productId: UUID,
+        val paymentStatus: ListOrdersSuccessResponseOrdersInnerProductsInner.PaymentStatus,
+    )
+
+    data class OrderRow(
+        val customerId: UUID,
+        val orderId: UUID,
+    )
+
+    override fun getOrders(): List<ListOrdersSuccessResponseOrdersInner> {
+        val result = connection.prepareStatement(
+            """
+                SELECT
+                    "order".customer_id as customer_id,
+                    "order".payment_status as payment_status,
+                    "order".id as order_id,
+                    order_line.product_id as product_id
+                FROM
+                "order" INNER JOIN order_line
+                ON "order".id = order_line.order_id
+            """.trimIndent()
+        ).executeQuery()
+
+        val flatList = buildList {
+            while (result.next()) {
+                add(
+                    OrderLineRow(
+                        customerId = result.getUUID("customer_id"),
+                        orderId = result.getUUID("order_id"),
+                        productId = result.getUUID("product_id"),
+                        paymentStatus = result.getPaymentStatus("payment_status")
+                    )
+                )
+            }
+        }
+        return flatList.groupBy {
+            OrderRow(
+                customerId = it.customerId,
+                orderId = it.orderId,
+            )
+        }.map { (orderData, orderRows) ->
+            ListOrdersSuccessResponseOrdersInner(
+                orderId = orderData.orderId,
+                customerId = orderData.customerId,
+                products = orderRows.map {
+                    ListOrdersSuccessResponseOrdersInnerProductsInner(
+                        productId = it.productId,
+                        paymentStatus = it.paymentStatus
+                    )
+                }
+            )
         }
     }
 
@@ -62,7 +117,7 @@ class PostgresOrderRepository(
         ).apply {
             setUUID(1, UUID.randomUUID())
             setUUID(2, customerId)
-            setPaymentStatus(3, PaymentStatus.Unpaid)
+            setPaymentStatus(3, ListOrdersSuccessResponseOrdersInnerProductsInner.PaymentStatus.Unpaid)
         }.executeQuery()
 
         check(result.next())
