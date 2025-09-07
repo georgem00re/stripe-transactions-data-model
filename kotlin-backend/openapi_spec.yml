@@ -1,0 +1,68 @@
+openapi: "3.0.0"
+info:
+  version: 3.0.0
+  title: Stripe Transactions API
+paths:
+  /health:
+    get:
+      operationId: getHealth
+      tags:
+        - health
+      description: |
+        Endpoint used to verify connectivity.
+      responses:
+        200:
+          description: Health OK.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+  /customer:
+    post:
+      operationId: createCustomer
+      description: |
+        Creates a customer.
+      tags:
+        - customers
+      responses:
+        201:
+          description: Customer created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateCustomerSuccessResponse'
+components:
+  schemas:
+    SuccessResponse:
+      type: object
+      required:
+        - ok
+      properties:
+        ok:
+          type: boolean
+    ErrorResponse:
+      type: object
+      required:
+        - error
+        - msg
+      properties:
+        error:
+          type: string
+        msg:
+          type: string
+    CreateCustomerSuccessResponse:
+      type: object
+      required:
+        - customerId
+      properties:
+        customerId:
+          type: string
+          format: uuid
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
