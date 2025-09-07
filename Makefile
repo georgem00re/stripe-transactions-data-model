@@ -15,6 +15,11 @@ kotlin-backend-run-tests:
 kotlin-ktlint-check:
 	cd kotlin-backend && ./gradlew ktlintcheck -p app/ --console=plain
 
+# Installs the Stripe CLI using Homebrew (macOS/Linux).
+# See https://stripe.com/docs/stripe-cli#install for other platforms.
+stripe-brew-install:
+	brew install stripe/stripe-cli/stripe
+
 # Opens a browser window and links the Stripe CLI on your machine with your Stripe account, so it can forward real
 # events (in test mode) from Stripe's servers to your local backend. The login creates a session token that lasts for
 # 90 days; after that you'll need to run this again.
