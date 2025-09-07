@@ -75,6 +75,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ListProductsSuccessResponse'
+  /order:
+    post:
+      operationId: createOrder
+      tags:
+        - orders
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrderRequestBody'
+      responses:
+        201:
+          description: Order created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateOrderSuccessResponse'
 components:
   schemas:
     SuccessResponse:
@@ -147,6 +165,33 @@ components:
               id:
                 type: string
                 format: uuid
+    CreateOrderRequestBody:
+      type: object
+      required:
+        - customerId
+        - products
+      properties:
+        customerId:
+          type: string
+          format: uuid
+        products:
+          type: array
+          items:
+            type: object
+            required:
+              - productId
+            properties:
+              productId:
+                type: string
+                format: uuid
+    CreateOrderSuccessResponse:
+      type: object
+      required:
+        - orderId
+      properties:
+        orderId:
+          type: string
+          format: uuid
   securitySchemes:
     basicAuth:
       type: http
