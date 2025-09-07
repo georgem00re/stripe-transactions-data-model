@@ -1,5 +1,4 @@
 import java.sql.PreparedStatement
-import java.sql.Types
 import java.util.UUID
 
 fun PreparedStatement.setUUID(

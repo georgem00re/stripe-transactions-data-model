@@ -1,5 +1,6 @@
-import com.example.app.database.PooledDataSource
-import com.example.app.database.getUUID
+package com.example.app.database
+
+import setUUID
 import java.io.Closeable
 import java.sql.Connection
 import java.util.UUID

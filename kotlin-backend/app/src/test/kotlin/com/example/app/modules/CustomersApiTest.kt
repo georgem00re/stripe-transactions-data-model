@@ -1,5 +1,7 @@
 package com.example.app.modules
 
+import com.example.app.database.CustomerRepository
+import com.example.app.database.PostgresCustomerRepository
 import com.example.app.database.TestDatabase
 import com.example.app.infrastructure.koin.KoinContext
 import com.example.app.utils.createCustomer
@@ -25,6 +27,7 @@ class CustomersApiTest : KoinTest {
             modules(
                 module {
                     single { CustomersApi() }
+                    factory<CustomerRepository> { PostgresCustomerRepository() }
                 },
             )
         }.let {
