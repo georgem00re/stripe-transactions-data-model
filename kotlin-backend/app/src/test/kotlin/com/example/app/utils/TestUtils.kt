@@ -7,5 +7,12 @@ fun CustomersApi.createCustomer() =
     runBlocking {
         createCustomer(
             call = createMockApplicationCall(),
-        )
+        ).customerId
+    }
+
+fun CustomersApi.listCustomers() =
+    runBlocking {
+        listCustomers(
+            call = createMockApplicationCall(),
+        ).customers
     }

@@ -4,6 +4,7 @@ import com.example.app.database.CustomerRepository
 import com.example.app.database.PostgresCustomerRepository
 import com.example.app.generated.apis.CustomersApiModule
 import com.example.app.generated.models.CreateCustomerSuccessResponse
+import com.example.app.generated.models.ListCustomersSuccessResponse
 import com.example.app.infrastructure.koin.KtorKoinComponent
 import io.ktor.server.application.ApplicationCall
 import org.koin.core.component.get
@@ -21,5 +22,12 @@ class CustomersApi : CustomersApiModule, KtorKoinComponent() {
             customerRepository.createCustomer()
         }
         return CreateCustomerSuccessResponse(customerId)
+    }
+
+    override suspend fun listCustomers(call: ApplicationCall): ListCustomersSuccessResponse {
+        val customers = get<CustomerRepository>().use { customerRepository ->
+            customerRepository.getCustomers()
+        }
+        return ListCustomersSuccessResponse(customers)
     }
 }

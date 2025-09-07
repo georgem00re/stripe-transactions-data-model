@@ -5,6 +5,7 @@ import com.example.app.database.PostgresCustomerRepository
 import com.example.app.database.TestDatabase
 import com.example.app.infrastructure.koin.KoinContext
 import com.example.app.utils.createCustomer
+import com.example.app.utils.listCustomers
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -14,7 +15,7 @@ import org.koin.core.context.stopKoin
 import org.koin.dsl.module
 import org.koin.test.KoinTest
 import org.koin.test.get
-import kotlin.test.assertNotNull
+import kotlin.test.assertEquals
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CustomersApiTest : KoinTest {
@@ -41,8 +42,13 @@ class CustomersApiTest : KoinTest {
     }
 
     @Test
-    fun `Customers can be created`() {
+    fun `Customers can be created and retrieved`() {
         val customerId = get<CustomersApi>().createCustomer()
-        assertNotNull(customerId)
+
+        val customers = get<CustomersApi>().listCustomers()
+        assertEquals(1, customers.size)
+
+        val customer = customers.first()
+        assertEquals(customerId, customer.id)
     }
 }

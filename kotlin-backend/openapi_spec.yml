@@ -31,6 +31,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CreateCustomerSuccessResponse'
+  /customers:
+    get:
+      operationId: listCustomers
+      tags:
+        - customers
+      responses:
+        200:
+          description: |
+            A list of customers.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListCustomersSuccessResponse'
 components:
   schemas:
     SuccessResponse:
@@ -58,6 +71,21 @@ components:
         customerId:
           type: string
           format: uuid
+    ListCustomersSuccessResponse:
+      type: object
+      required:
+        - customers
+      properties:
+        customers:
+          type: array
+          items:
+            type: object
+            required:
+              - id
+            properties:
+              id:
+                type: string
+                format: uuid
   securitySchemes:
     basicAuth:
       type: http
