@@ -1,7 +1,6 @@
 package com.example.app.database
 
 import com.example.app.generated.models.ListCustomersSuccessResponseCustomersInner
-import setUUID
 import java.io.Closeable
 import java.sql.Connection
 import java.util.UUID

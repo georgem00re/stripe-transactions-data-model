@@ -2,8 +2,6 @@ package com.example.app.database
 
 import com.example.app.generated.models.ListOrdersSuccessResponseOrdersInner
 import com.example.app.generated.models.ListOrdersSuccessResponseOrdersInnerProductsInner
-import setPaymentStatus
-import setUUID
 import java.io.Closeable
 import java.sql.Connection
 import java.util.UUID
@@ -11,6 +9,7 @@ import java.util.UUID
 interface OrderRepository : Closeable {
     fun createOrderWithOrderLines(customerId: UUID, productIds: List<UUID>): UUID
     fun getOrders(): List<ListOrdersSuccessResponseOrdersInner>
+    fun getOrderCost(orderId: UUID): Int
 }
 
 class PostgresOrderRepository(
@@ -88,6 +87,24 @@ class PostgresOrderRepository(
                 }
             )
         }
+    }
+
+    override fun getOrderCost(orderId: UUID): Int {
+        val result = connection.prepareStatement(
+            """
+                SELECT
+                    SUM(product.price_gbx) as total_cost
+                FROM order_line 
+                INNER JOIN product 
+                ON order_line.product_id = product.id
+                WHERE order_line.order_id = ?::uuid
+            """.trimIndent()
+        ).apply {
+            setUUID(1, orderId)
+        }.executeQuery()
+
+        check(result.next())
+        return result.getInt("total_cost")
     }
 
     private fun createOrderLine(orderId: UUID, productId: UUID): UUID {

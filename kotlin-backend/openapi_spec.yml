@@ -106,6 +106,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ListOrdersSuccessResponse'
+  /payment-intent:
+    post:
+      operationId: createPaymentIntent
+      tags:
+        - paymentIntents
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePaymentIntentRequestBody'
+      responses:
+        201:
+          description: Payment intent created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatePaymentIntentSuccessResponse'
 components:
   schemas:
     SuccessResponse:
@@ -241,6 +259,25 @@ components:
                       enum:
                         - Paid
                         - Unpaid
+    CreatePaymentIntentSuccessResponse:
+      type: object
+      required:
+        - paymentIntentId
+      properties:
+        paymentIntentId:
+          type: string
+          format: uuid
+    CreatePaymentIntentRequestBody:
+      type: object
+      required:
+        - orderId
+        - amountGbx
+      properties:
+        orderId:
+          type: string
+          format: uuid
+        amountGbx:
+          type: integer
   securitySchemes:
     basicAuth:
       type: http

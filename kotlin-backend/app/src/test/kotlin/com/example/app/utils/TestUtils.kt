@@ -2,9 +2,11 @@ package com.example.app.utils
 
 import com.example.app.generated.models.CreateOrderRequestBody
 import com.example.app.generated.models.CreateOrderRequestBodyProductsInner
+import com.example.app.generated.models.CreatePaymentIntentRequestBody
 import com.example.app.generated.models.CreateProductRequestBody
 import com.example.app.modules.CustomersApi
 import com.example.app.modules.OrdersApi
+import com.example.app.modules.PaymentIntentsApi
 import com.example.app.modules.ProductsApi
 import kotlinx.coroutines.runBlocking
 import java.util.UUID
@@ -56,4 +58,14 @@ fun OrdersApi.listOrders() = runBlocking {
     listOrders(
         call = createMockApplicationCall(),
     ).orders
+}
+
+fun PaymentIntentsApi.createPaymentIntent(orderId: UUID, amountGbx: Int) = runBlocking {
+    createPaymentIntent(
+        call = createMockApplicationCall(),
+        data = CreatePaymentIntentRequestBody(
+            orderId = orderId,
+            amountGbx = amountGbx
+        )
+    ).paymentIntentId
 }
