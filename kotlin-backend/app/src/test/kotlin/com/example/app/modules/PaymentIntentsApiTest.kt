@@ -10,7 +10,9 @@ import com.example.app.database.PostgresProductRepository
 import com.example.app.database.ProductRepository
 import com.example.app.database.TestDatabase
 import com.example.app.infrastructure.koin.KoinContext
+import com.example.app.integrations.stripe.StripePayments
 import com.example.app.utils.createCustomer
+import com.example.app.utils.createMockStripePayments
 import com.example.app.utils.createOrder
 import com.example.app.utils.createPaymentIntent
 import com.example.app.utils.createProduct
@@ -39,6 +41,7 @@ class PaymentIntentsApiTest : KoinTest {
                     single { CustomersApi() }
                     single { ProductsApi() }
                     single { PaymentIntentsApi() }
+                    factory<StripePayments> { createMockStripePayments() }
                     factory<OrderRepository> { PostgresOrderRepository() }
                     factory<CustomerRepository> { PostgresCustomerRepository() }
                     factory<ProductRepository> { PostgresProductRepository() }

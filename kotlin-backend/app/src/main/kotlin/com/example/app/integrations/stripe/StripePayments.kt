@@ -4,16 +4,22 @@ import com.stripe.Stripe
 import com.stripe.model.PaymentIntent
 import com.stripe.param.PaymentIntentCreateParams
 
-object StripePayments {
+const val CURRENCY = "gbp"
+
+interface StripePayments {
+    fun createPaymentIntent(amountGbx: Long): String
+}
+
+class StripePaymentsImpl(stripeSecretKey: String) : StripePayments {
     init {
-        Stripe.apiKey = System.getenv("STRIPE_SECRET_KEY") ?: throw Exception("Missing variable STRIPE_SECRET_KEY")
+        Stripe.apiKey = stripeSecretKey
     }
-    fun createPaymentIntent(amountGbx: Long): PaymentIntent {
+    override fun createPaymentIntent(amountGbx: Long): String {
         return PaymentIntent.create(
             PaymentIntentCreateParams.Builder()
                 .setAmount(amountGbx)
-                .setCurrency("gbp")
+                .setCurrency(CURRENCY)
                 .build()
-        )
+        ).id
     }
 }
