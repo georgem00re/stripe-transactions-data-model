@@ -1,1 +1,6 @@
 .idea/
+.gradle
+kotlin-backend/app/build
+kotlin-backend/app/src/main/kotlin/com/example/app/generated
+.kotlin
+.DS_Store
