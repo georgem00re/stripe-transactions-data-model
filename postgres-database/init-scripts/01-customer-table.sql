@@ -1,0 +1,4 @@
+
+CREATE TABLE IF NOT EXISTS customer (
+    id UUID NOT NULL PRIMARY KEY
+);
