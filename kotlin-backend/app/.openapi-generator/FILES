@@ -2,7 +2,10 @@ src/main/kotlin/com/example/app/generated/AppMain.kt
 src/main/kotlin/com/example/app/generated/Configuration.kt
 src/main/kotlin/com/example/app/generated/apis/CustomersApi.kt
 src/main/kotlin/com/example/app/generated/apis/HealthApi.kt
+src/main/kotlin/com/example/app/generated/apis/ProductsApi.kt
 src/main/kotlin/com/example/app/generated/models/CreateCustomerSuccessResponse.kt
+src/main/kotlin/com/example/app/generated/models/CreateProductRequestBody.kt
+src/main/kotlin/com/example/app/generated/models/CreateProductSuccessResponse.kt
 src/main/kotlin/com/example/app/generated/models/ErrorResponse.kt
 src/main/kotlin/com/example/app/generated/models/ListCustomersSuccessResponse.kt
 src/main/kotlin/com/example/app/generated/models/ListCustomersSuccessResponseCustomersInner.kt
