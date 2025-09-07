@@ -1,5 +1,4 @@
-
-KOTLIN_BACKEND_PORT := 3000
+include .env
 
 postgres-database-start:
 	cd postgres-database && docker compose down -v && docker compose up --build
