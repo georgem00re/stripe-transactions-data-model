@@ -34,3 +34,6 @@ Content-Type: application/json
     }
   ]
 }
+
+### List all orders
+GET {{KOTLIN_BACKEND_BASE_URL}}/orders
