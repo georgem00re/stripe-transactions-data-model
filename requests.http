@@ -37,3 +37,12 @@ Content-Type: application/json
 
 ### List all orders
 GET {{KOTLIN_BACKEND_BASE_URL}}/orders
+
+### Create a payment intent
+POST {{KOTLIN_BACKEND_BASE_URL}}/payment-intent
+Content-Type: application/json
+
+{
+  "orderId": "98f1414a-5805-46f4-840c-95483dee732f",
+  "amountGbx": "1099"
+}
