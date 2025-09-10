@@ -7,3 +7,6 @@ GET {{KOTLIN_BACKEND_BASE_URL}}/health
 
 ### Create a customer
 POST {{KOTLIN_BACKEND_BASE_URL}}/customer
+
+### List all customers
+GET {{KOTLIN_BACKEND_BASE_URL}}/customers
