@@ -21,3 +21,16 @@ Content-Type: application/json
 
 ### List all products
 GET {{KOTLIN_BACKEND_BASE_URL}}/products
+
+### Create an order
+POST {{KOTLIN_BACKEND_BASE_URL}}/order
+Content-Type: application/json
+
+{
+  "customerId": "5d868ea6-31c3-4520-b27a-f23a276d5c6f",
+  "products": [
+    {
+      "productId": "f727a462-bceb-4e53-8c75-7c33290cda99"
+    }
+  ]
+}
