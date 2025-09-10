@@ -1,5 +1,13 @@
 include .env
 
+ifndef STRIPE_SECRET_KEY
+$(error STRIPE_SECRET_KEY is not set)
+endif
+
+ifndef KOTLIN_BACKEND_PORT
+$(error KOTLIN_BACKEND_PORT is not set)
+endif
+
 postgres-database-start:
 	cd postgres-database && docker compose down -v && docker compose up --build
 
@@ -7,7 +15,10 @@ postgres-database-psql:
 	PGPASSWORD=postgres psql -U postgres -d postgres -h localhost --pset pager=off
 
 kotlin-backend-start:
-	cd kotlin-backend && PORT=$(KOTLIN_BACKEND_PORT) ./gradlew run clean -p app/ --console=plain
+	cd kotlin-backend && \
+	PORT=$(KOTLIN_BACKEND_PORT) \
+	STRIPE_SECRET_KEY=$(STRIPE_SECRET_KEY) \
+	./gradlew run clean -p app/ --console=plain
 
 kotlin-backend-run-tests:
 	cd kotlin-backend && ./gradlew test -p app/ --console=plain
