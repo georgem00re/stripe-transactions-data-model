@@ -10,3 +10,11 @@ POST {{KOTLIN_BACKEND_BASE_URL}}/customer
 
 ### List all customers
 GET {{KOTLIN_BACKEND_BASE_URL}}/customers
+
+### Create a product
+POST {{KOTLIN_BACKEND_BASE_URL}}/product
+Content-Type: application/json
+
+{
+  "priceGbx": "1099"
+}
