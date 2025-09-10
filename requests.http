@@ -1,0 +1,5 @@
+
+@KOTLIN_BACKEND_PORT = 3000
+
+### Query GET /health endpoint
+GET http://localhost:{{KOTLIN_BACKEND_PORT}}/health
