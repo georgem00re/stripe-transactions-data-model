@@ -69,3 +69,9 @@ fun PaymentIntentsApi.createPaymentIntent(orderId: UUID, amountGbx: Long) = runB
         )
     ).paymentIntentId
 }
+
+fun PaymentIntentsApi.listPaymentIntents() = runBlocking {
+    listPaymentIntents(
+        call = createMockApplicationCall(),
+    ).paymentIntents
+}

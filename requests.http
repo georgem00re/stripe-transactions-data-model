@@ -46,3 +46,6 @@ Content-Type: application/json
   "orderId": "98f1414a-5805-46f4-840c-95483dee732f",
   "amountGbx": "1099"
 }
+
+### List all payment intents
+GET {{KOTLIN_BACKEND_BASE_URL}}/payment-intents

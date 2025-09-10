@@ -1,11 +1,13 @@
 package com.example.app.database
 
+import com.example.app.generated.models.ListPaymentIntentsSuccessResponsePaymentIntentsInner
 import java.io.Closeable
 import java.sql.Connection
 import java.util.UUID
 
 interface PaymentIntentRepository : Closeable {
     fun createPaymentIntent(orderId: UUID, amountGbx: Long, stripeId: String): UUID
+    fun listPaymentIntents(): List<ListPaymentIntentsSuccessResponsePaymentIntentsInner>
 }
 
 class PostgresPaymentIntentRepository(
@@ -31,5 +33,26 @@ class PostgresPaymentIntentRepository(
 
         check(result.next())
         return result.getUUID("id")
+    }
+
+    override fun listPaymentIntents(): List<ListPaymentIntentsSuccessResponsePaymentIntentsInner> {
+        val result = connection.prepareStatement(
+            """
+                SELECT * FROM payment_intent
+            """.trimIndent()
+        ).executeQuery()
+
+        return buildList {
+            while (result.next()) {
+                add(
+                    ListPaymentIntentsSuccessResponsePaymentIntentsInner(
+                        paymentIntentId = result.getUUID("id"),
+                        orderId = result.getUUID("order_id"),
+                        amountGbx = result.getLong("amount_gbx"),
+                        stripeId = result.getString("stripe_id")
+                    )
+                )
+            }
+        }
     }
 }

@@ -7,6 +7,7 @@ import com.example.app.database.PostgresPaymentIntentRepository
 import com.example.app.generated.apis.PaymentIntentsApiModule
 import com.example.app.generated.models.CreatePaymentIntentRequestBody
 import com.example.app.generated.models.CreatePaymentIntentSuccessResponse
+import com.example.app.generated.models.ListPaymentIntentsSuccessResponse
 import com.example.app.infrastructure.koin.KtorKoinComponent
 import com.example.app.integrations.stripe.StripePayments
 import com.example.app.integrations.stripe.StripePaymentsImpl
@@ -49,5 +50,12 @@ class PaymentIntentsApi : PaymentIntentsApiModule, KtorKoinComponent() {
             )
         }
         return CreatePaymentIntentSuccessResponse(paymentIntentId)
+    }
+
+    override suspend fun listPaymentIntents(call: ApplicationCall): ListPaymentIntentsSuccessResponse {
+        val paymentIntents = get<PaymentIntentRepository>().use { paymentIntentRepository ->
+            paymentIntentRepository.listPaymentIntents()
+        }
+        return ListPaymentIntentsSuccessResponse(paymentIntents)
     }
 }

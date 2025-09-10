@@ -124,6 +124,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CreatePaymentIntentSuccessResponse'
+  /payment-intents:
+    get:
+      operationId: listPaymentIntents
+      tags:
+        - paymentIntents
+      responses:
+        200:
+          description: |
+            A list of payment intents.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListPaymentIntentsSuccessResponse'
 components:
   schemas:
     SuccessResponse:
@@ -280,6 +293,32 @@ components:
         amountGbx:
           type: integer
           format: int64
+    ListPaymentIntentsSuccessResponse:
+      type: object
+      required:
+        - paymentIntents
+      properties:
+        paymentIntents:
+          type: array
+          items:
+            type: object
+            required:
+              - paymentIntentId
+              - orderId
+              - amountGbx
+              - stripeId
+            properties:
+              paymentIntentId:
+                type: string
+                format: uuid
+              orderId:
+                type: string
+                format: uuid
+              amountGbx:
+                type: integer
+                format: int64
+              stripeId:
+                type: string
   securitySchemes:
     basicAuth:
       type: http

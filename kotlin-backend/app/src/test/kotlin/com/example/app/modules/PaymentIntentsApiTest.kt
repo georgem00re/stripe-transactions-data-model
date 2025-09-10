@@ -16,6 +16,8 @@ import com.example.app.utils.createMockStripePayments
 import com.example.app.utils.createOrder
 import com.example.app.utils.createPaymentIntent
 import com.example.app.utils.createProduct
+import com.example.app.utils.exampleStripePaymentIntentId
+import com.example.app.utils.listPaymentIntents
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -25,6 +27,7 @@ import org.koin.core.context.stopKoin
 import org.koin.dsl.module
 import org.koin.test.KoinTest
 import org.koin.test.get
+import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -59,7 +62,7 @@ class PaymentIntentsApiTest : KoinTest {
     }
 
     @Test
-    fun `Payment intents can be created`() {
+    fun `Payment intents can be created and listed`() {
         val customerId = get<CustomersApi>().createCustomer()
         val productAmountGbx = 10L
         val productId = get<ProductsApi>().createProduct(productAmountGbx)
@@ -72,6 +75,14 @@ class PaymentIntentsApiTest : KoinTest {
             orderId = orderId,
             amountGbx = productAmountGbx
         )
-        assertNotNull(paymentIntentId)
+
+        val paymentIntents = get<PaymentIntentsApi>().listPaymentIntents()
+        assertEquals(1, paymentIntents.size)
+
+        val paymentIntent = paymentIntents.first()
+        assertEquals(paymentIntentId, paymentIntent.paymentIntentId)
+        assertEquals(orderId, paymentIntent.orderId)
+        assertEquals(productAmountGbx, paymentIntent.amountGbx)
+        assertEquals(exampleStripePaymentIntentId, paymentIntent.stripeId)
     }
 }
