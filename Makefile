@@ -41,3 +41,6 @@ stripe-brew-install:
 # 90 days; after that you'll need to run this again.
 stripe-authenticate:
 	stripe login
+
+stripe-listen:
+	stripe listen --forward-to localhost:$(KOTLIN_BACKEND_PORT)/webhooks/stripe
