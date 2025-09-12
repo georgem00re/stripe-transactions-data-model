@@ -10,6 +10,7 @@ import com.stripe.net.Webhook
 import io.ktor.server.application.ApplicationCall
 import org.koin.dsl.module
 import org.koin.core.component.get
+import org.slf4j.LoggerFactory
 
 val stripeWebhooksApiModule = module {
     single<StripeWebhooksApiModule> { StripeWebhooksApi() }
@@ -19,12 +20,15 @@ val stripeWebhooksApiModule = module {
 class MissingStripeSignature : BadRequestError("Missing 'Stripe-Signature' header")
 
 class StripeWebhooksApi : StripeWebhooksApiModule, KtorKoinComponent() {
+    private val logger = LoggerFactory.getLogger(this::class.java)
+
     override suspend fun receiveStripeEvent(
         call: ApplicationCall,
         data: String,
     ): SuccessResponse {
         val signatureHeader = call.request.headers["Stripe-Signature"] ?: throw MissingStripeSignature()
         val stripeEvent = Webhook.constructEvent(data, signatureHeader, get<StripeConfig>().signingSecret)
+        logger.info("Received an event from Stripe of type ${stripeEvent.type}")
 
         return SuccessResponse(true)
     }
