@@ -22,6 +22,7 @@ kotlin-backend-start:
 	cd kotlin-backend && \
 	PORT=$(KOTLIN_BACKEND_PORT) \
 	STRIPE_SECRET_KEY=$(STRIPE_SECRET_KEY) \
+	STRIPE_WEBHOOK_SIGNING_SECRET=$(STRIPE_WEBHOOK_SIGNING_SECRET) \
 	./gradlew run clean -p app/ --console=plain
 
 kotlin-backend-run-tests:
