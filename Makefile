@@ -4,6 +4,10 @@ ifndef STRIPE_SECRET_KEY
 $(error STRIPE_SECRET_KEY is not set)
 endif
 
+ifndef STRIPE_WEBHOOK_SIGNING_SECRET
+$(error STRIPE_WEBHOOK_SIGNING_SECRET is not set)
+endif
+
 ifndef KOTLIN_BACKEND_PORT
 $(error KOTLIN_BACKEND_PORT is not set)
 endif
