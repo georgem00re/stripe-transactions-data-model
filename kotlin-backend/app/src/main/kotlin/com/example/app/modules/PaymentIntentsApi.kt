@@ -9,8 +9,10 @@ import com.example.app.generated.models.CreatePaymentIntentRequestBody
 import com.example.app.generated.models.CreatePaymentIntentSuccessResponse
 import com.example.app.generated.models.ListPaymentIntentsSuccessResponse
 import com.example.app.infrastructure.koin.KtorKoinComponent
+import com.example.app.integrations.stripe.StripeConfig
 import com.example.app.integrations.stripe.StripePayments
 import com.example.app.integrations.stripe.StripePaymentsImpl
+import com.example.app.integrations.stripe.getStripeConfig
 import io.ktor.server.application.ApplicationCall
 import org.koin.core.component.get
 import org.koin.dsl.module
@@ -19,11 +21,8 @@ val paymentIntentsApiModule =
     module {
         single<PaymentIntentsApiModule> { PaymentIntentsApi() }
         factory<PaymentIntentRepository> { PostgresPaymentIntentRepository() }
-        single<StripePayments> {
-            StripePaymentsImpl(
-                System.getenv("STRIPE_SECRET_KEY") ?: throw Exception("Missing variable STRIPE_SECRET_KEY")
-            )
-        }
+        single<StripeConfig> { getStripeConfig() }
+        single<StripePayments> { StripePaymentsImpl(get<StripeConfig>().secretKey) }
     }
 
 class OrderCostDiscrepancy : BadRequestError("The payment amount does not match the order total")
