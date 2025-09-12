@@ -137,6 +137,25 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ListPaymentIntentsSuccessResponse'
+  /webhooks/stripe:
+    post:
+      operationId: receiveStripeEvent
+      tags:
+        - stripeWebhooks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: string
+      responses:
+        200:
+          description: |
+            Event received successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
 components:
   schemas:
     SuccessResponse:
