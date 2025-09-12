@@ -10,6 +10,7 @@ interface OrderRepository : Closeable {
     fun createOrderWithOrderLines(customerId: UUID, productIds: List<UUID>): UUID
     fun getOrders(): List<ListOrdersSuccessResponseOrdersInner>
     fun getOrderCost(orderId: UUID): Long
+    fun markOrderAsPaid(orderId: UUID)
 }
 
 class PostgresOrderRepository(
@@ -105,6 +106,19 @@ class PostgresOrderRepository(
 
         check(result.next())
         return result.getLong("total_cost")
+    }
+
+    override fun markOrderAsPaid(orderId: UUID) {
+        connection.prepareStatement(
+            """
+                UPDATE "order"
+                SET payment_status = ?::payment_status
+                WHERE id = ?::uuid
+            """.trimIndent()
+        ).apply {
+            setPaymentStatus(1, ListOrdersSuccessResponseOrdersInnerProductsInner.PaymentStatus.Paid)
+            setUUID(2, orderId)
+        }.executeUpdate()
     }
 
     private fun createOrderLine(orderId: UUID, productId: UUID): UUID {

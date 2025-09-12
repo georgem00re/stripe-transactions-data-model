@@ -8,6 +8,7 @@ import java.util.UUID
 interface PaymentIntentRepository : Closeable {
     fun createPaymentIntent(orderId: UUID, amountGbx: Long, stripeId: String): UUID
     fun listPaymentIntents(): List<ListPaymentIntentsSuccessResponsePaymentIntentsInner>
+    fun getPaymentIntentByStripeId(stripeId: String): ListPaymentIntentsSuccessResponsePaymentIntentsInner?
 }
 
 class PostgresPaymentIntentRepository(
@@ -54,5 +55,24 @@ class PostgresPaymentIntentRepository(
                 )
             }
         }
+    }
+
+    override fun getPaymentIntentByStripeId(stripeId: String): ListPaymentIntentsSuccessResponsePaymentIntentsInner? {
+        val result = connection.prepareStatement(
+            """
+                SELECT * FROM payment_intent
+                WHERE stripe_id = ?
+            """.trimIndent()
+        ).apply {
+            setString(1, stripeId)
+        }.executeQuery()
+
+        return if (!result.next()) null
+        else ListPaymentIntentsSuccessResponsePaymentIntentsInner(
+            paymentIntentId = result.getUUID("id"),
+            orderId = result.getUUID("order_id"),
+            amountGbx = result.getLong("amount_gbx"),
+            stripeId = result.getString("stripe_id")
+        )
     }
 }
