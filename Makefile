@@ -44,3 +44,6 @@ stripe-authenticate:
 
 stripe-listen:
 	stripe listen --forward-to localhost:$(KOTLIN_BACKEND_PORT)/webhooks/stripe
+
+stripe-simulate-successful-payment:
+	stripe trigger payment_intent.succeeded
